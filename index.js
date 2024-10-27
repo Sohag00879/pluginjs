@@ -1,21 +1,44 @@
 
-document.addEventListener("DOMContentLoaded", function() {
-    const testimonials = document.querySelectorAll('.summary-block-wrapper .summary-item');
-    let index = 0;
-    const intervalTime = 5000; // Interval time in milliseconds (e.g., 5000ms = 5 seconds)
-    
-    function showTestimonial() {
-        // Remove 'active' class from all testimonials
-        testimonials.forEach((item) => item.classList.remove('active'));
+document.addEventListener('DOMContentLoaded', function() {
+    const slides = document.querySelectorAll('.testimonial-slide');
+    const totalSlides = slides.length;
+    let currentIndex = 0;
 
-        // Add 'active' class to the current testimonial
-        testimonials[index].classList.add('active');
-
-        // Move to the next testimonial
-        index = (index + 1) % testimonials.length;
+    // Function to show the current slide
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.style.transform = `translateX(${(i - index) * 100}%)`;
+        });
     }
-    // Initialize first testimonial
-    showTestimonial();
-    // Set interval for testimonial rotation
-    setInterval(showTestimonial, intervalTime);
+
+    // Function to go to the next slide
+    function nextSlide() {
+        currentIndex = (currentIndex + 1) % totalSlides;
+        showSlide(currentIndex);
+    }
+
+    // Function to go to the previous slide
+    function prevSlide() {
+        currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+        showSlide(currentIndex);
+    }
+
+    // Create navigation buttons
+    const prevButton = document.createElement('button');
+    prevButton.className = 'prev';
+    prevButton.innerText = '❮';
+    prevButton.addEventListener('click', prevSlide);
+    
+    const nextButton = document.createElement('button');
+    nextButton.className = 'next';
+    nextButton.innerText = '❯';
+    nextButton.addEventListener('click', nextSlide);
+
+    // Add buttons to the testimonial plugin
+    const testimonialContainer = document.querySelector('.testimonial-counter-plugin');
+    testimonialContainer.appendChild(prevButton);
+    testimonialContainer.appendChild(nextButton);
+
+    // Initial display
+    showSlide(currentIndex);
 });
